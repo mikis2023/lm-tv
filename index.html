@@ -2,7 +2,6 @@
 <html>
 <head>
 <meta charset="UTF-8">
-
 <title>LM TV</title>
 
 <style>
@@ -13,19 +12,15 @@ html,body{
   height:100%;
   overflow:hidden;
   background:black;
+  font-family:Arial;
 }
 
-iframe{
-  position:absolute;
+#pantalla{
+  position:fixed;
   inset:0;
   width:100vw;
   height:100vh;
   border:none;
-  display:none;
-}
-
-iframe.activo{
-  display:block;
 }
 
 #nombre{
@@ -37,7 +32,6 @@ iframe.activo{
   color:white;
   padding:8px 14px;
   border-radius:12px;
-  font-family:Arial;
   font-weight:bold;
 }
 
@@ -46,63 +40,56 @@ iframe.activo{
 
 <body>
 
-<iframe id="p0" class="activo" src="PantallaLogistica.html"></iframe>
+<iframe id="pantalla"></iframe>
 
-<iframe id="p1" src="https://script.google.com/a/macros/lamartinaproducciones.com/s/AKfycbyPZlEfAveFINBRKi7IeXsqFMZKOpCLY6kMA3KpIqoe5F_ic00T5_xe09SF-gzPq8_E/exec"></iframe>
-
-<iframe id="p2" src="https://script.google.com/a/macros/unoasrl.com/s/AKfycbzY-FXZFuWas7Gd2v5GmSQmO5DYIePctbXr7rb2x7SeVCPnSJ34__hYtJPD1CrnF6PKtQ/exec"></iframe>
-
-<div id="nombre">LOGISTICA</div>
+<div id="nombre"></div>
 
 <script>
 
 const pantallas = [
-  {
-    id:"p0",
-    nombre:"LOGISTICA",
-    tiempo:40000
-  },
-  {
-    id:"p1",
-    nombre:"FINANZAS",
-    tiempo:40000
-  },
-  {
-    id:"p2",
-    nombre:"UNOA",
-    tiempo:40000
-  }
-];
 
-let actual = 0;
+{
+  nombre:"LOGISTICA",
+  url:"PantallaLogistica.html",
+  tiempo:40000
+},
 
-function mostrarPantalla(){
+{
+  nombre:"FINANZAS",
+  url:"https://script.google.com/macros/s/AKfycbyPZlEfAveFINBRKi7IeXsqFMZKOpCLY6kMA3KpIqoe5F_ic00T5_xe09SF-gzPq8_E/exec",
+  tiempo:40000
+},
 
-  document.querySelectorAll("iframe")
-    .forEach(x=>x.classList.remove("activo"));
-
-  const p = pantallas[actual];
-
-  document.getElementById(p.id)
-    .classList.add("activo");
-
-  document.getElementById("nombre")
-    .textContent = p.nombre;
-
-  setTimeout(()=>{
-
-    actual++;
-
-    if(actual >= pantallas.length){
-      actual = 0;
-    }
-
-    mostrarPantalla();
-
-  },p.tiempo);
+{
+  nombre:"UNOA",
+  url:"https://script.google.com/macros/s/AKfycbzY-FXZFuWas7Gd2v5GmSQmO5DYIePctbXr7rb2x7SeVCPnSJ34__hYtJPD1CrnF6PKtQ/exec",
+  tiempo:40000
 }
 
-mostrarPantalla();
+];
+
+let actual = Number(localStorage.getItem("lm_tv_actual") || 0);
+
+const iframe = document.getElementById("pantalla");
+
+iframe.src = pantallas[actual].url;
+
+document.getElementById("nombre").textContent =
+  pantallas[actual].nombre;
+
+setTimeout(()=>{
+
+  actual++;
+
+  if(actual >= pantallas.length){
+    actual = 0;
+  }
+
+  localStorage.setItem("lm_tv_actual",actual);
+
+  location.reload();
+
+},pantallas[actual].tiempo);
 
 </script>
 
