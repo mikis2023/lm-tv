@@ -47,52 +47,6 @@ table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px so
   0%{opacity:1;}
   50%{opacity:0.35;}
   100%{opacity:1;}
-}.circularPanel{
-  background:#fff7e6;
-  color:#111;
-  padding:25px;
-}
-
-.circularBox{
-  height:100%;
-  width:100%;
-  overflow:hidden;
-  padding:25px 45px;
-}
-
-.circularBox h1{
-  font-size:46px;
-  margin:0;
-  color:#8a4b00;
-}
-
-.circularBox h2{
-  font-size:30px;
-  margin:5px 0 20px;
-}
-
-.circularBox h3{
-  font-size:25px;
-  margin:14px 0 5px;
-}
-
-.circularBox p,
-.circularBox li{
-  font-size:22px;
-  line-height:1.25;
-}
-
-.circularBox ul{
-  columns:2;
-}
-
-.alertaCircular{
-  margin-top:18px;
-  padding:18px;
-  background:#ffe0b2;
-  border-left:10px solid orange;
-  font-size:27px;
-  font-weight:900;
 }
 </style>
 </head>
@@ -145,37 +99,7 @@ table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px so
       <span id="pizarraInfo"></span>
     </div>
   </section>
-   <section id="circularPanel" class="panel circularPanel active">
-    <div class="circularBox">
-      <h1>Ã°Å¸â€œÅ’ CIRCULAR N.Ã‚Âº 1</h1>
-      <h2>ÃƒÂREA COMERCIAL Y LOGÃƒÂSTICA</h2>
-
-      <p>A partir de la fecha, el alquiler de estufas tendrÃƒÂ¡ condiciones obligatorias.</p>
-
-      <h3>Ã¢Å“â€¦ Hasta 2 estufas</h3>
-      <p>Se enviarÃƒÂ¡n las unidades mÃƒÂ¡s nuevas, enumeradas e identificadas por color.</p>
-
-      <h3>Ã¢Å“â€¦ 3 o mÃƒÂ¡s estufas</h3>
-      <p>El alquiler queda condicionado a contar con personal de guardia desde el inicio hasta el final del evento.</p>
-
-      <h3>Ã¢Å“â€¦ El personal debe presentarse con:</h3>
-      <ul>
-        <li>Bien vestido e identificado</li>
-        <li>Caja de herramientas</li>
-        <li>Gomitas, tornillos y herramientas segÃƒÂºn estufa</li>
-        <li>Cinta teflÃƒÂ³n</li>
-        <li>Detector de pÃƒÂ©rdida de gas</li>
-        <li>Manguera, vÃƒÂ¡lvula verde y abrazaderas</li>
-      </ul>
-
-      <h3>Ã¢Å“â€¦ Guardias y reportes</h3>
-      <p>Si no utilizan formulario, deberÃƒÂ¡n reportarse obligatoriamente por WhatsApp al ingresar a cada guardia y en cada evento visitado.</p>
-
-      <div class="alertaCircular">
-        Ã¢Å¡Â Ã¯Â¸Â Medidas obligatorias para garantizar seguridad, control y correcto funcionamiento.
-      </div>
-    </div>
-  </section>
+   
 </div>
 </div>
 <script>
@@ -230,7 +154,7 @@ function renderPizarra(rows, rowsHistorial=[]){
   let headerIndex = rows.findIndex(r => r.join(' ').toLowerCase().includes('estado') && r.join(' ').toLowerCase().includes('cliente'));
   if(headerIndex < 0) headerIndex = 0;
 
-  const fallbackHeaders=['ID PEDIDO','FECHA EVENTO','CLIENTE','DIRECCIÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œN','ASESOR','ESTADO LOGÃƒÆ’Ã†â€™Ãƒâ€šÃ‚ÂSTICA','CHOFER ENTREGA','HORA ENTREGA','CHOFER RETIRO','HORA RETIRO','OBS LOGÃƒÆ’Ã†â€™Ãƒâ€šÃ‚ÂSTICA'];
+  const fallbackHeaders=['ID PEDIDO','FECHA EVENTO','CLIENTE','DIRECCIÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“N','ASESOR','ESTADO LOGÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂSTICA','CHOFER ENTREGA','HORA ENTREGA','CHOFER RETIRO','HORA RETIRO','OBS LOGÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂSTICA'];
   const headers=rows[headerIndex].slice(0,11).map((h,i)=> clean(h) || fallbackHeaders[i]);
 
   const data=rows.slice(headerIndex+1).map(r=>{
@@ -251,11 +175,36 @@ const dataHistorial = rowsHistorial.slice(headerIndexHist+1).map(r=>{
   return x;
 }).filter(r=>r.some(x=>x));
 
+// ORDENAR PIZARRA POR FECHA EVENTO MÃS RECIENTE ARRIBA
+data.sort((a,b)=>{
+  const fa = parseFecha(a[1]);
+  const fb = parseFecha(b[1]);
+  return fb - fa;
+});
+
 const dataContadores = data.concat(dataHistorial);
 
   function normalizar(txt){
     return String(txt||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
   }
+  function parseFecha(valor){
+  if(!valor) return new Date(0);
+
+  const txt = String(valor).trim();
+  const p = txt.split(/[\/\-]/);
+
+  if(p.length === 3){
+    let d = parseInt(p[0],10);
+    let m = parseInt(p[1],10)-1;
+    let y = parseInt(p[2],10);
+
+    if(y < 100) y += 2000;
+
+    return new Date(y,m,d);
+  }
+
+  return new Date(txt);
+}
 
   function fechaValida(valor){
     if(!valor) return null;
@@ -305,9 +254,9 @@ const dataContadores = data.concat(dataHistorial);
 
   if(nombre==='clari' || nombre==='cla' || nombre==='clarisse'){
     nombre='Clarisse';
-  }else if(nombre==='vero' || nombre==='veronica' || nombre==='verÃƒÆ’Ã‚Â³nica'){
+  }else if(nombre==='vero' || nombre==='veronica' || nombre==='verÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³nica'){
     nombre='Veronica';
-  }else if(nombre==='lujan' || nombre==='lujÃƒÆ’Ã‚Â¡n'){
+  }else if(nombre==='lujan' || nombre==='lujÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡n'){
     nombre='Lujan';
   }else if(nombre==='karen'){
     nombre='Karen';
@@ -471,7 +420,7 @@ function tieneAlertaRoja(r){
     <div class="resumenTop">
       <div class="cardTop"><div class="num">${eventosDia}</div><div class="txt">Eventos hoy</div></div>
       <div class="cardTop"><div class="num">${eventosMes}</div><div class="txt">Eventos del mes</div></div>
-      <div class="cardTop"><div class="num">${averiasMes}</div><div class="txt">AverÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­as del mes</div></div>
+      <div class="cardTop"><div class="num">${averiasMes}</div><div class="txt">AverÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­as del mes</div></div>
     </div>
 
     <div class="rankGrid">
@@ -529,7 +478,7 @@ function setScreen(n){
 
   document.getElementById('agendaPanel').classList.toggle('active',current===0);
   document.getElementById('pizarraPanel').classList.toggle('active',current===1);
-  document.getElementById('circularPanel').classList.remove('active');
+  
 
   document.getElementById('screenTitle').textContent=current===0?'Agenda 2026':'PIZARRA LOGISTICA';
 
@@ -542,26 +491,7 @@ function resetRotation(){
   if(!paused)rotateTimer=setTimeout(()=>setScreen(current+1),ROTATE_MS[current]);
 }
 
-function mostrarCircularTemporal(){
-  if(paused)return;
 
-  if(rotateTimer)clearTimeout(rotateTimer);
-  if(scrollTimer)clearInterval(scrollTimer);
-
-  document.getElementById('agendaPanel').classList.remove('active');
-  document.getElementById('pizarraPanel').classList.remove('active');
-  document.getElementById('circularPanel').classList.add('active');
-
-  document.getElementById('screenTitle').textContent='CIRCULAR INTERNA';
-  document.getElementById('status').textContent='Mostrando circular obligatoria';
-
-  setTimeout(()=>{
-    document.getElementById('circularPanel').classList.remove('active');
-    setScreen(current);
-  },60000);
-}
-
-setInterval(mostrarCircularTemporal, 30 * 60 * 1000);
 function activeScrollBox(){
   return current===0
     ? document.getElementById('agendaScroll')
