@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -922,25 +923,57 @@ function numLM(v){
 
   return Number(txt) || 0;
 }
-
-
 function fechaMesActual(v){
   if(!v) return false;
 
   let d = null;
+  let txt = String(v).trim();
 
-  if(v instanceof Date){
-    d = v;
-  } else {
-    const txt = String(v).trim();
+  // Caso Google Sheets gviz: Date(2026,5,3)
+  if(txt.startsWith('Date(')){
+    const nums = txt
+      .replace('Date(','')
+      .replace(')','')
+      .split(',')
+      .map(x => Number(x.trim()));
 
-    if(txt.includes('/')){
-      const p = txt.split('/');
-      if(p.length >= 3){
-        d = new Date(Number(p[2]), Number(p[1]) - 1, Number(p[0]));
-      }
-    } else if(txt.includes('-')){
-      d = new Date(txt);
+    if(nums.length >= 3){
+      d = new Date(nums[0], nums[1], nums[2]);
+    }
+  }
+
+  // Quitar hora si viene: 01-06-26 17:00
+  if(!d){
+    txt = txt.split(' ')[0].trim();
+  }
+
+  // Caso Paraguay con / : 01/06/2026 o 01/06/26
+  if(!d && txt.includes('/')){
+    const p = txt.split('/');
+
+    if(p.length >= 3){
+      let dia = Number(p[0]);
+      let mes = Number(p[1]) - 1;
+      let anio = Number(p[2]);
+
+      if(anio < 100) anio = 2000 + anio;
+
+      d = new Date(anio, mes, dia);
+    }
+  }
+
+  // Caso Paraguay con - : 01-06-2026 o 01-06-26
+  if(!d && txt.includes('-')){
+    const p = txt.split('-');
+
+    if(p.length >= 3){
+      let dia = Number(p[0]);
+      let mes = Number(p[1]) - 1;
+      let anio = Number(p[2]);
+
+      if(anio < 100) anio = 2000 + anio;
+
+      d = new Date(anio, mes, dia);
     }
   }
 
@@ -951,7 +984,6 @@ function fechaMesActual(v){
   return d.getFullYear() === hoy.getFullYear()
     && d.getMonth() === hoy.getMonth();
 }
-
 function renderObjetivo(rowsVentas, rowsGlobal){
   let ventas = 0;
   let egresos = 0;
@@ -1020,12 +1052,12 @@ function renderObjetivo(rowsVentas, rowsGlobal){
 
   document.getElementById('pctVentas').textContent = pctVentas + '%';
   document.getElementById('pctEgresos').textContent = pctEgresos + '%';
-
-  document.getElementById('objetivoInfo').textContent =
-    'Ventas filas: ' + rowsVentas.length +
-    ' | GLOBAL filas: ' + rowsGlobal.length +
-    ' | Egresos: C fecha / H monto / L categoria' +
-    ' | Actualizado ' + new Date().toLocaleTimeString();
+document.getElementById('objetivoInfo').textContent =
+  'Ventas filas: ' + rowsVentas.length +
+  ' | Ej fecha ventas: ' + rowsVentas[1]?.[0] +
+  ' | Ej monto F: ' + rowsVentas[1]?.[5] +
+  ' | Actualizado ' + new Date().toLocaleTimeString();
+  
 }
 
 function moneyObjetivo(n){
