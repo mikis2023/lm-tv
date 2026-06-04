@@ -74,6 +74,187 @@ table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px so
   50%{opacity:0.35;}
   100%{opacity:1;}
 }
+.objetivoWrap{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:12px;
+  padding:14px;
+}
+
+.objetivoBigTitle{
+  text-align:center;
+  font-size:38px;
+  font-weight:900;
+  letter-spacing:1px;
+  color:#fff;
+}
+
+.objetivoGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.objetivoGrid.mini{
+  gap:10px;
+}
+
+.objetivoCard{
+  background:linear-gradient(180deg,#151f2e,#0e121a);
+  border:1px solid #2e3848;
+  border-radius:12px;
+  padding:10px;
+  box-shadow:0 6px 16px rgba(0,0,0,.25);
+}
+
+.objetivoCard.small{
+  padding:8px 10px;
+}
+
+.objetivoLabel{
+  color:#cbd5e1;
+  font-size:22px;
+  font-weight:900;
+  margin-bottom:8px;
+}
+
+.objetivoValue{
+  font-size:43px;
+  font-weight:900;
+  line-height:1;
+  margin-bottom:8px;
+  letter-spacing:.5px;
+}
+
+.objetivoMeta{
+  color:#ffffff;
+  font-size:34px;
+  font-weight:900;
+  margin-bottom:10px;
+}
+
+.bar{
+  height:14px;
+  background:#1e293b;
+  border-radius:999px;
+  overflow:hidden;
+  border:1px solid #334155;
+}
+
+.barIn{
+  height:100%;
+  width:0%;
+  transition:width .4s ease;
+}
+
+.green{color:#16a34a}
+.red{color:#ef4444}
+.yellow{color:#facc15}
+.cyan{color:#22d3ee}
+.greenBg{background:#16a34a}
+.redBg{background:#ef4444}
+
+.objetivoPct{
+  text-align:right;
+  font-size:24px;
+  font-weight:900;
+  margin-top:6px;
+}
+.pendientesBox{
+  background:linear-gradient(180deg,#111827,#0b111a);
+  border:1px solid #2e3848;
+  border-radius:14px;
+  padding:10px;
+  margin-top:8px;
+  box-shadow:0 6px 18px rgba(0,0,0,.25);
+}
+
+.pendientesHead{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:8px;
+}
+
+.pendientesTitulo{
+  font-size:24px;
+  font-weight:900;
+  color:#fff;
+  letter-spacing:1px;
+}
+
+.pendientesSub{
+  font-size:12px;
+  color:#cbd5e1;
+  font-weight:800;
+  margin-top:2px;
+}
+
+.pendientesTotal{
+  text-align:right;
+  font-weight:900;
+}
+
+#pendTotalIds{
+  font-size:20px;
+  color:#facc15;
+}
+
+#pendTotalMonto{
+  font-size:24px;
+  color:#ef4444;
+}
+
+.pendientesBody{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+}
+
+.pendAsesoraCard{
+  background:#05070b;
+  border:1px solid #263445;
+  border-radius:10px;
+  padding:8px;
+}
+
+.pendAsesoraNombre{
+  font-size:14px;
+  font-weight:900;
+  color:#fff;
+  margin-bottom:5px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.pendAsesoraDatos{
+  display:flex;
+  justify-content:space-between;
+  gap:6px;
+  font-weight:900;
+}
+
+.pendIds{
+  color:#facc15;
+  font-size:15px;
+}
+
+.pendMonto{
+  color:#ef4444;
+  font-size:15px;
+}
+
+.pendientesFooter{
+  margin-top:6px;
+  font-size:10px;
+  color:#cbd5e1;
+  font-weight:800;
+  text-align:right;
+}
 </style>
 </head>
 <body>
@@ -130,6 +311,75 @@ table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px so
       <span id="pizarraInfo"></span>
     </div>
   </section>
+  <section id="objetivoPanel" class="panel">
+  <div class="sectionTitle">
+    <span>Objetivo Comercial</span>
+    <span>Ventas 400.000.000 / Egresos 180.000.000</span>
+  </div>
+
+  <div id="objetivoScroll" class="scrollBox">
+    <div class="objetivoWrap">
+      <div class="objetivoBigTitle">OBJETIVO COMERCIAL DEL MES</div>
+
+      <div class="objetivoGrid">
+        <div class="objetivoCard">
+          <div class="objetivoLabel">Fac. Ventas actual</div>
+          <div class="objetivoValue green" id="objVentasActual">Gs. 0</div>
+          <div class="objetivoMeta">Objetivo: <b>Gs. 400.000.000</b></div>
+          <div class="bar"><div id="barVentas" class="barIn greenBg"></div></div>
+          <div class="objetivoPct" id="pctVentas">0%</div>
+        </div>
+
+        <div class="objetivoCard">
+          <div class="objetivoLabel">Egresos actuales</div>
+          <div class="objetivoValue red" id="objEgresosActual">Gs. 0</div>
+          <div class="objetivoMeta">Tope: <b>Gs. 180.000.000</b></div>
+          <div class="bar"><div id="barEgresos" class="barIn redBg"></div></div>
+          <div class="objetivoPct" id="pctEgresos">0%</div>
+        </div>
+      </div>
+
+      <div class="objetivoGrid mini">
+        <div class="objetivoCard small">
+          <div class="objetivoLabel">Falta para ventas</div>
+          <div class="objetivoValue yellow" id="objFaltaVentas">Gs. 0</div>
+        </div>
+
+        <div class="objetivoCard small">
+          <div class="objetivoLabel">Diferencia egresos</div>
+          <div class="objetivoValue cyan" id="objDifEgresos">Gs. 0</div>
+        </div>
+      </div>
+      <div class="pendientesBox">
+        <div class="pendientesHead">
+          <div>
+            <div class="pendientesTitulo">AL 31 DE MAYO</div>
+            <div class="pendientesSub">Pendientes de cobro por asesora</div>
+          </div>
+
+          <div class="pendientesTotal">
+            <div id="pendTotalIds">0 IDs</div>
+            <div id="pendTotalMonto">Gs. 0</div>
+          </div>
+        </div>
+
+        <div id="pendientesCobroBody" class="pendientesBody">
+          Cargando pendientes...
+        </div>
+
+        <div class="pendientesFooter" id="pendientesInfo">
+          Actualizando...
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Fuente: Fac_ventas + GLOBAL</span>
+    <span id="objetivoInfo">Cargando...</span>
+  </div>
+</section>
    
 </div>
 </div>
@@ -138,23 +388,94 @@ const SPREADSHEET_ID = "1o6Em3OTB1C3FwU0uca2uZNzA5nJHFFEzxeA22LGt6dc";
 const GID_AGENDA = "1978039141";
 const GID_PIZARRA = "1724295369";
 const GID_HISTORIAL = '1391163035';
-const ROTATE_MS = [20000, 40000];
+const SPREADSHEET_ID_FINANZAS = "1r_fcPg1FXPaE29pb-stDhJq9DdcKNDz-8N19U63e-hg";
+const GID_GLOBAL = "1939904617";
+const GID_FAC_VENTAS = "179208916";
+const SPREADSHEET_ID_ORDENES = "1IvnufRsi_ibQjXPC_4Ji-qV_MIAjfHMkSYBqp3GNhdE";
+const GID_ORDENES_TRABAJO = "1686737542";
+const ROTATE_MS = [20000, 40000, 25000];
 let current = 0, paused = false, autoScroll = true, rotateTimer = null, scrollTimer = null;
 function esc(s){return String(s ?? '').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]));}
 function clean(v){return String(v ?? '').trim();}
 function tableToRows(resp){
-  if(!resp || !resp.table || !resp.table.rows) throw new Error('Respuesta vacia de Google Sheets');
-  return resp.table.rows.map(r => (r.c || []).map(c => c ? clean(c.f ?? c.v ?? '') : ''));
+  if(!resp || !resp.table || !resp.table.rows) {
+    throw new Error('Respuesta vacia de Google Sheets');
+  }
+
+  return resp.table.rows.map(r =>
+    (r.c || []).map(c => {
+      if(!c) return '';
+
+      // Si es nÃºmero real, usar el valor real para no perder ceros
+      if(typeof c.v === 'number') return c.v;
+
+      // Si Google devuelve fecha tipo Date(2026,5,3), usar el formato visual
+      if(typeof c.v === 'string' && c.v.startsWith('Date(')){
+        return clean(c.f ?? c.v);
+      }
+
+      // Para textos normales usar el valor formateado si existe
+      if(c.f !== null && c.f !== undefined) return clean(c.f);
+
+      if(c.v !== null && c.v !== undefined) return clean(c.v);
+
+      return '';
+    })
+  );
 }
-function loadSheet(gid){
+function loadSheet(gid, spreadsheetId = SPREADSHEET_ID){
   return new Promise((resolve,reject)=>{
     const cb = 'lm_cb_' + gid + '_' + Date.now() + '_' + Math.floor(Math.random()*10000);
-    const timeout = setTimeout(()=>{cleanup(); reject(new Error('Tiempo agotado cargando hoja'));},15000);
-    function cleanup(){clearTimeout(timeout); delete window[cb]; if(script && script.parentNode) script.parentNode.removeChild(script);}
-    window[cb] = (resp)=>{try{const rows=tableToRows(resp); cleanup(); resolve(rows);}catch(e){cleanup(); reject(e);}};
+
+    const timeout = setTimeout(()=>{
+      cleanup();
+      reject(new Error('Tiempo agotado cargando hoja'));
+    },15000);
+
+    function cleanup(){
+      clearTimeout(timeout);
+      delete window[cb];
+      if(script && script.parentNode) script.parentNode.removeChild(script);
+    }
+
+    window[cb] = (resp)=>{
+      try{
+        const rows = tableToRows(resp);
+        cleanup();
+        resolve(rows);
+      }catch(e){
+        cleanup();
+        reject(e);
+      }
+    };
+
     const script = document.createElement('script');
-    script.onerror = ()=>{cleanup(); reject(new Error('No se pudo cargar Google Sheets'));};
-    script.src = 'https://docs.google.com/spreadsheets/d/' + encodeURIComponent(SPREADSHEET_ID) + '/gviz/tq?gid=' + encodeURIComponent(gid) + '&headers=0&tqx=responseHandler:' + cb;
+
+    script.onerror = ()=>{
+      cleanup();
+      reject(new Error('No se pudo cargar Google Sheets'));
+    };
+
+    let baseUrl = "";
+
+    if(String(spreadsheetId).startsWith("e/")){
+      baseUrl =
+        "https://docs.google.com/spreadsheets/d/" +
+        spreadsheetId +
+        "/gviz/tq";
+    }else{
+      baseUrl =
+        "https://docs.google.com/spreadsheets/d/" +
+        encodeURIComponent(spreadsheetId) +
+        "/gviz/tq";
+    }
+
+    script.src =
+      baseUrl +
+      "?gid=" + encodeURIComponent(gid) +
+      "&headers=0&tqx=responseHandler:" +
+      cb;
+
     document.body.appendChild(script);
   });
 }
@@ -189,14 +510,14 @@ const fallbackHeaders=[
   'ID PEDIDO',
   'FECHA EVENTO',
   'CLIENTE',
-  'DIRECCIÃ“N',
+  'DIRECCIÃƒÆ’Ã¢â‚¬Å“N',
   'ASESOR',
-  'ESTADO LOGÃSTICA',
+  'ESTADO LOGÃƒÆ’Ã‚ÂSTICA',
   'CHOFER ENTREGA',
   'HORA ENTREGA',
   'CHOFER RETIRO',
   'HORA RETIRO',
-  'OBS LOGÃSTICA'
+  'OBS LOGÃƒÆ’Ã‚ÂSTICA'
 ];
   const headers=rows[headerIndex].slice(0,11).map((h,i)=> clean(h) || fallbackHeaders[i]);
 
@@ -272,9 +593,9 @@ const dataContadores = data.concat(dataHistorial);
 
   if(nombre==='clari' || nombre==='cla' || nombre==='clarisse'){
     nombre='Clarisse';
-  }else if(nombre==='vero' || nombre==='veronica' || nombre==='verÃ³nica'){
+  }else if(nombre==='vero' || nombre==='veronica' || nombre==='verÃƒÆ’Ã‚Â³nica'){
   nombre='Veronica';
-}else if(nombre==='lujan' || nombre==='lujÃ¡n'){
+}else if(nombre==='lujan' || nombre==='lujÃƒÆ’Ã‚Â¡n'){
   nombre='Lujan';
 }else if(nombre==='karen'){
     nombre='Karen';
@@ -431,7 +752,7 @@ dataContadores.forEach(r=>{
     sumar(asesorasMes, asesor);
     sumar(choferesMes, choferEntrega);
     sumar(choferesMes, choferRetiro);
-    if(estado.includes('averia') || estado.includes('averÃ­a')) averiasMes++;
+    if(estado.includes('averia') || estado.includes('averÃƒÆ’Ã‚Â­a')) averiasMes++;
   }
 });
   let resumen=`
@@ -449,7 +770,7 @@ dataContadores.forEach(r=>{
     <div class="resumenTop">
   <div class="cardTop"><div class="num">${eventosDia}</div><div class="txt">Eventos hoy</div></div>
   <div class="cardTop"><div class="num">${eventosMes}</div><div class="txt">Eventos del mes</div></div>
-  <div class="cardTop"><div class="num">${averiasMes}</div><div class="txt">AverÃ­as del mes</div></div>
+  <div class="cardTop"><div class="num">${averiasMes}</div><div class="txt">AverÃƒÆ’Ã‚Â­as del mes</div></div>
 </div>
 
 <div class="rankGrid">
@@ -481,11 +802,42 @@ dataContadores.forEach(r=>{
 
   document.getElementById('pizarraInfo').textContent=`Registros: ${data.length} | Actualizado ${new Date().toLocaleTimeString()}`;
 }
+
+function setScreen(n){
+  current = (n + 3) % 3;
+
+  document.getElementById('agendaPanel').classList.toggle('active', current === 0);
+  document.getElementById('pizarraPanel').classList.toggle('active', current === 1);
+  document.getElementById('objetivoPanel').classList.toggle('active', current === 2);
+
+  document.getElementById('screenTitle').textContent =
+    current === 0 ? 'Agenda 2026' :
+    current === 1 ? 'PIZARRA LOGISTICA' :
+    'OBJETIVO COMERCIAL';
+
+  resetRotation();
+  resetAutoScroll();
+}
+function activeScrollBox(){
+  if (current === 0) return document.getElementById('agendaScroll');
+  if (current === 1) return document.getElementById('pizarraScroll');
+  return document.getElementById('objetivoScroll');
+}
+function resetRotation(){
+  if(rotateTimer) clearTimeout(rotateTimer);
+
+  if(!paused){
+    rotateTimer = setTimeout(()=>{
+      setScreen(current + 1);
+    }, ROTATE_MS[current]);
+  }
+}
 async function reloadAll(){
   try{
     document.getElementById('status').textContent='Cargando datos...';
 
-    const [a,p,h]=await Promise.all([
+    // 1) Carga principal: Agenda + Pizarra + Historial
+    const [a,p,h] = await Promise.all([
       loadSheet(GID_AGENDA),
       loadSheet(GID_PIZARRA),
       loadSheet(GID_HISTORIAL)
@@ -494,37 +846,36 @@ async function reloadAll(){
     renderAgenda(a);
     renderPizarra(p,h);
 
-    document.getElementById('status').textContent='Datos cargados '+new Date().toLocaleTimeString();
+    document.getElementById('status').textContent =
+      'Datos cargados ' + new Date().toLocaleTimeString();
+
     resetAutoScroll();
-  }
-  catch(e){
+
+  }catch(e){
     document.getElementById('status').textContent='Error al cargar datos';
-    activeScrollBox().innerHTML='<div class="error">Error al cargar datos:<br>'+esc(e.message)+'</div>';
+    activeScrollBox().innerHTML =
+      '<div class="error">Error al cargar datos:<br>'+esc(e.message)+'</div>';
   }
-}
-function setScreen(n){
-  current=(n+2)%2;
 
-  document.getElementById('agendaPanel').classList.toggle('active',current===0);
-  document.getElementById('pizarraPanel').classList.toggle('active',current===1);
-  
+  // 2) Carga aparte del Objetivo Comercial
+  try{
+    const [v,g,o] = await Promise.all([
+  loadSheet(GID_FAC_VENTAS, SPREADSHEET_ID_FINANZAS),
+  loadSheet(GID_GLOBAL, SPREADSHEET_ID_FINANZAS),
+  loadSheet(GID_ORDENES_TRABAJO, SPREADSHEET_ID_ORDENES)
+]);
 
-  document.getElementById('screenTitle').textContent=current===0?'Agenda 2026':'PIZARRA LOGISTICA';
+renderObjetivo(v,g);
+renderPendientesCobro(o);
 
-  resetRotation();
-  resetAutoScroll();
-}
+  }catch(e){
+    console.error('Error objetivo comercial:', e);
 
-function resetRotation(){
-  if(rotateTimer)clearTimeout(rotateTimer);
-  if(!paused)rotateTimer=setTimeout(()=>setScreen(current+1),ROTATE_MS[current]);
-}
-
-
-function activeScrollBox(){
-  return current===0
-    ? document.getElementById('agendaScroll')
-    : document.getElementById('pizarraScroll');
+    const objInfo = document.getElementById('objetivoInfo');
+    if(objInfo){
+      objInfo.textContent = 'Error al cargar Finanzas: ' + e.message;
+    }
+  }
 }
 
 function resetAutoScroll(){
@@ -544,6 +895,200 @@ function resetAutoScroll(){
     if(box.scrollTop>=max-2){dir=-1;hold=70;}
     if(box.scrollTop<=2){dir=1;hold=70;}
   },45);
+}
+const OBJ_VENTAS = 400000000;
+const OBJ_EGRESOS = 180000000;
+
+function numLM(v){
+  if(v === null || v === undefined || v === '') return 0;
+
+  if(typeof v === 'number') return v;
+
+  let txt = String(v).trim();
+
+  txt = txt.replace(/[^\d.,-]/g, '');
+
+  if(txt.includes('.') && !txt.includes(',')){
+    return Number(txt.replace(/\./g, '')) || 0;
+  }
+
+  if(txt.includes(',') && !txt.includes('.')){
+    return Number(txt.replace(/,/g, '')) || 0;
+  }
+
+  if(txt.includes('.') && txt.includes(',')){
+    return Number(txt.replace(/\./g, '').replace(',', '.')) || 0;
+  }
+
+  return Number(txt) || 0;
+}
+
+
+function fechaMesActual(v){
+  if(!v) return false;
+
+  let d = null;
+
+  if(v instanceof Date){
+    d = v;
+  } else {
+    const txt = String(v).trim();
+
+    if(txt.includes('/')){
+      const p = txt.split('/');
+      if(p.length >= 3){
+        d = new Date(Number(p[2]), Number(p[1]) - 1, Number(p[0]));
+      }
+    } else if(txt.includes('-')){
+      d = new Date(txt);
+    }
+  }
+
+  if(!d || isNaN(d.getTime())) return false;
+
+  const hoy = new Date();
+
+  return d.getFullYear() === hoy.getFullYear()
+    && d.getMonth() === hoy.getMonth();
+}
+
+function renderObjetivo(rowsVentas, rowsGlobal){
+  let ventas = 0;
+  let egresos = 0;
+
+  // ==========================
+  // FAC_VENTAS
+  // A = Fecha
+  // F = Monto
+  // ==========================
+  rowsVentas.slice(1).forEach(r => {
+    const fecha = r[0];        // A
+    const monto = numLM(r[5]); // F
+
+    if(fechaMesActual(fecha)){
+      ventas += monto;
+    }
+  });
+
+  // ==========================
+  // GLOBAL
+  // C = Fecha
+  // H = Monto
+  // L = Categoria
+  // Categorias validas:
+  // Efijos + Evariables + Eoperativos
+  // ==========================
+  rowsGlobal.slice(1).forEach(r => {
+    const fecha = r[2];         // C
+    const monto = numLM(r[7]);  // H
+
+    const categoria = String(r[11] || '') // L
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g,'')
+      .trim();
+
+    if(!fechaMesActual(fecha)) return;
+
+    const esEgresoValido =
+      categoria === 'efijos' ||
+      categoria === 'e fijos' ||
+      categoria === 'evariables' ||
+      categoria === 'e variables' ||
+      categoria === 'eoperativos' ||
+      categoria === 'e operativos';
+
+    if(esEgresoValido){
+      egresos += monto;
+    }
+  });
+
+  const pctVentas = OBJ_VENTAS ? Math.round((ventas / OBJ_VENTAS) * 100) : 0;
+  const pctEgresos = OBJ_EGRESOS ? Math.round((egresos / OBJ_EGRESOS) * 100) : 0;
+
+  document.getElementById('objVentasActual').textContent = moneyObjetivo(ventas);
+  document.getElementById('objEgresosActual').textContent = moneyObjetivo(egresos);
+
+  document.getElementById('objFaltaVentas').textContent =
+    moneyObjetivo(Math.max(OBJ_VENTAS - ventas, 0));
+
+  document.getElementById('objDifEgresos').textContent =
+    moneyObjetivo(OBJ_EGRESOS - egresos);
+
+  document.getElementById('barVentas').style.width = Math.min(pctVentas,100) + '%';
+  document.getElementById('barEgresos').style.width = Math.min(pctEgresos,100) + '%';
+
+  document.getElementById('pctVentas').textContent = pctVentas + '%';
+  document.getElementById('pctEgresos').textContent = pctEgresos + '%';
+
+  document.getElementById('objetivoInfo').textContent =
+    'Ventas filas: ' + rowsVentas.length +
+    ' | GLOBAL filas: ' + rowsGlobal.length +
+    ' | Egresos: C fecha / H monto / L categoria' +
+    ' | Actualizado ' + new Date().toLocaleTimeString();
+}
+
+function moneyObjetivo(n){
+  n = Number(n) || 0;
+  return 'Gs. ' + Math.round(n).toLocaleString('es-PY');
+}
+function renderPendientesCobro(rowsOrdenes){
+  const resumen = {};
+  let totalIds = 0;
+  let totalMonto = 0;
+
+  rowsOrdenes.slice(1).forEach(r => {
+    const asesora = clean(r[1]) || "SIN ASESORA";
+    const idOrden = clean(r[2]);
+    const saldo = numLM(r[5]);
+
+    if(!idOrden) return;
+    if(saldo <= 0) return;
+
+    if(!resumen[asesora]){
+      resumen[asesora] = {
+        asesora,
+        ids: new Set(),
+        monto: 0
+      };
+    }
+
+    resumen[asesora].ids.add(idOrden);
+    resumen[asesora].monto += saldo;
+  });
+
+  const grupos = Object.values(resumen)
+    .map(x => ({
+      asesora: x.asesora,
+      ids: x.ids.size,
+      monto: x.monto
+    }))
+    .sort((a,b) => b.monto - a.monto);
+
+  totalIds = grupos.reduce((acc,g) => acc + g.ids, 0);
+  totalMonto = grupos.reduce((acc,g) => acc + g.monto, 0);
+
+  document.getElementById("pendTotalIds").textContent = totalIds + " IDs";
+  document.getElementById("pendTotalMonto").textContent = moneyObjetivo(totalMonto);
+
+  const body = document.getElementById("pendientesCobroBody");
+
+  if(!grupos.length){
+    body.innerHTML = '<div class="pendAsesoraCard">Sin pendientes</div>';
+  }else{
+    body.innerHTML = grupos.map(g => `
+      <div class="pendAsesoraCard">
+        <div class="pendAsesoraNombre">${esc(g.asesora)}</div>
+        <div class="pendAsesoraDatos">
+          <div class="pendIds">${g.ids} IDs</div>
+          <div class="pendMonto">${moneyObjetivo(g.monto)}</div>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  document.getElementById("pendientesInfo").textContent =
+    "Actualizado " + new Date().toLocaleTimeString();
 }
 
 function manualScroll(delta){
