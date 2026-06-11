@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -42,21 +41,113 @@ border-color:#1ed750
 .stage{flex:1;min-height:0;border:1px solid var(--line);border-radius:10px;background:#090d14;overflow:hidden;position:relative}.panel{position:absolute;inset:0;display:none;flex-direction:column;padding:8px;gap:6px}.panel.active{display:flex}.sectionTitle{height:28px;display:flex;align-items:center;justify-content:space-between;font-size:16px;font-weight:900;text-transform:uppercase;letter-spacing:.5px}.sectionTitle span:last-child{font-size:11px;color:var(--muted);text-transform:none}.scrollBox{flex:1;min-height:0;overflow:auto;border:1px solid #263140;border-radius:8px;background:#060910;scroll-behavior:smooth}
 table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #2a3342;padding:3px 5px;overflow:hidden;text-overflow:ellipsis}th{position:sticky;top:0;background:#1e2735;color:#fff;z-index:2;text-transform:uppercase;font-weight:900}
 .agendaTable td{height:18px;font-size:12px;line-height:1.05;white-space:normal;vertical-align:top;font-weight:800}.agendaTable .title1 td{height:24px;background:#85b7df;color:#06111d;font-size:18px;text-align:center;font-weight:900;vertical-align:middle}.agendaTable .title2 td{height:20px;background:#0a2233;color:#b6d7f5;font-size:12px;text-align:center;font-weight:900;vertical-align:middle}.agendaTable .days td{height:30px;background:#8fc0e8;color:#06111d;text-align:center;font-size:14px;font-weight:900;vertical-align:middle}.agendaTable tr:nth-child(n+4):nth-child(even) td{background:#121861;color:#fff}.agendaTable tr:nth-child(n+4):nth-child(odd) td{background:#060816;color:#fff}
-.pizarraTable{table-layout:fixed;width:100%}
-.pizarraTable th{height:44px;font-size:9px;white-space:normal;line-height:1.12;vertical-align:middle;text-align:center;padding:4px 3px;overflow:visible;text-overflow:clip}
-.pizarraTable td{height:40px;font-size:10px;line-height:1.15;white-space:normal;text-align:center;font-weight:800;padding:4px 4px;vertical-align:middle;overflow:hidden;text-overflow:ellipsis}
-.pizarraTable td:nth-child(3),.pizarraTable td:nth-child(4),.pizarraTable td:nth-child(11){text-align:left}
-.pizarraTable th:nth-child(1),.pizarraTable td:nth-child(1){width:6%}
-.pizarraTable th:nth-child(2),.pizarraTable td:nth-child(2){width:8%}
-.pizarraTable th:nth-child(3),.pizarraTable td:nth-child(3){width:14%}
-.pizarraTable th:nth-child(4),.pizarraTable td:nth-child(4){width:17%}
-.pizarraTable th:nth-child(5),.pizarraTable td:nth-child(5){width:7%}
-.pizarraTable th:nth-child(6),.pizarraTable td:nth-child(6){width:10%}
-.pizarraTable th:nth-child(7),.pizarraTable td:nth-child(7){width:8%}
-.pizarraTable th:nth-child(8),.pizarraTable td:nth-child(8){width:8%;font-size:11px;line-height:1.25;white-space:normal;overflow:visible;text-overflow:clip}
-.pizarraTable th:nth-child(9),.pizarraTable td:nth-child(9){width:8%}
-.pizarraTable th:nth-child(10),.pizarraTable td:nth-child(10){width:8%;font-size:11px;line-height:1.25;white-space:normal;overflow:visible;text-overflow:clip}
-.pizarraTable th:nth-child(11),.pizarraTable td:nth-child(11){width:6%}
+.pizarraTable{
+  table-layout:fixed;
+  width:100%;
+}
+
+.pizarraTable th{
+  height:44px;
+  font-size:9px;
+  white-space:normal;
+  line-height:1.12;
+  vertical-align:middle;
+  text-align:center;
+  padding:4px 3px;
+  overflow:visible;
+  text-overflow:clip;
+}
+
+.pizarraTable td{
+  height:40px;
+  font-size:10px;
+  line-height:1.15;
+  white-space:normal;
+  text-align:center;
+  font-weight:800;
+  padding:4px 4px;
+  vertical-align:middle;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* Texto alineado a la izquierda */
+.pizarraTable td:nth-child(3),
+.pizarraTable td:nth-child(4),
+.pizarraTable td:nth-child(9){
+  text-align:left;
+}
+
+/* A = ID */
+.pizarraTable th:nth-child(1),
+.pizarraTable td:nth-child(1){
+  width:6%;
+}
+
+/* B = FECHA EVENTO */
+.pizarraTable th:nth-child(2),
+.pizarraTable td:nth-child(2){
+  width:8%;
+}
+
+/* C = CLIENTE - ACORTADO */
+.pizarraTable th:nth-child(3),
+.pizarraTable td:nth-child(3){
+  width:10%;
+  max-width:10%;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* D = DIRECCION - ACORTADO */
+.pizarraTable th:nth-child(4),
+.pizarraTable td:nth-child(4){
+  width:12%;
+  max-width:12%;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* E = ASESOR */
+.pizarraTable th:nth-child(5),
+.pizarraTable td:nth-child(5){
+  width:8%;
+}
+
+/* F = ESTADO */
+.pizarraTable th:nth-child(6),
+.pizarraTable td:nth-child(6){
+  width:13%;
+}
+
+/* G = QUIEN */
+.pizarraTable th:nth-child(7),
+.pizarraTable td:nth-child(7){
+  width:9%;
+}
+
+/* H = FECHAHORA */
+.pizarraTable th:nth-child(8),
+.pizarraTable td:nth-child(8){
+  width:13%;
+  font-size:10px;
+  line-height:1.25;
+  white-space:normal;
+  overflow:visible;
+  text-overflow:clip;
+}
+
+/* I = OBS LOGISTICA */
+.pizarraTable th:nth-child(9),
+.pizarraTable td:nth-child(9){
+  width:21%;
+  max-width:21%;
+  white-space:normal;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
 .estado-rojo td{background:#cf0711;color:#fff}.estado-blanco td{background:#f3f5f7;color:#111}.estado-amarillo td{background:#c99a00;color:#111}.estado-azul td{background:#064aa0;color:#fff}.estado-verde td{background:#078526;color:#fff}
 .empty,.error{display:flex;align-items:center;justify-content:center;height:100%;font-size:22px;font-weight:900;color:#ff9b9b;text-align:center}.footer{height:22px;display:flex;align-items:center;justify-content:space-between;color:#bcc8d8;font-size:11px;font-weight:800}.alertaRoja{
   background:#7f1d1d !important;
@@ -71,6 +162,40 @@ table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px so
 }
 
 @keyframes parpadeoRojo{
+  0%{opacity:1;}
+  50%{opacity:0.35;}
+  100%{opacity:1;}
+}
+.alertaPreparando90{
+  background:#facc15 !important;
+  color:#111827 !important;
+  animation: parpadeoAmarillo 1s infinite;
+}
+
+.alertaPreparando90 td{
+  background:#facc15 !important;
+  color:#111827 !important;
+  font-weight:bold;
+}
+
+@keyframes parpadeoAmarillo{
+  0%{opacity:1;}
+  50%{opacity:0.35;}
+  100%{opacity:1;}
+}
+.alertaCaminoRetiroNegro{
+  background:#000000 !important;
+  color:white !important;
+  animation: parpadeoCaminoRetiroNegro 1s infinite;
+}
+
+.alertaCaminoRetiroNegro td{
+  background:#000000 !important;
+  color:white !important;
+  font-weight:bold;
+}
+
+@keyframes parpadeoCaminoRetiroNegro{
   0%{opacity:1;}
   50%{opacity:0.35;}
   100%{opacity:1;}
@@ -407,7 +532,7 @@ function tableToRows(resp){
     (r.c || []).map(c => {
       if(!c) return '';
 
-      // Si es nÃºmero real, usar el valor real para no perder ceros
+      // Si es nÃƒÂºmero real, usar el valor real para no perder ceros
       if(typeof c.v === 'number') return c.v;
 
       // Si Google devuelve fecha tipo Date(2026,5,3), usar el formato visual
@@ -511,20 +636,20 @@ const fallbackHeaders=[
   'ID PEDIDO',
   'FECHA EVENTO',
   'CLIENTE',
-  'DIRECCIÃƒÆ’Ã¢â‚¬Å“N',
+  'DIRECCION',
   'ASESOR',
-  'ESTADO LOGÃƒÆ’Ã‚ÂSTICA',
-  'CHOFER ENTREGA',
-  'HORA ENTREGA',
-  'CHOFER RETIRO',
-  'HORA RETIRO',
-  'OBS LOGÃƒÆ’Ã‚ÂSTICA'
+  'ESTADO',
+  'QUIEN',
+  'FECHAHORA',
+  'QUIEN CIERRE',
+  'FECHAHORA CIERRE',
+  'OBS LOGISTICA'
 ];
-  const headers=rows[headerIndex].slice(0,11).map((h,i)=> clean(h) || fallbackHeaders[i]);
+  const headers=rows[headerIndex].slice(0,9).map((h,i)=> clean(h) || fallbackHeaders[i]);
 
   const data=rows.slice(headerIndex+1).map(r=>{
-    const x=r.slice(0,13);
-    while(x.length<13)x.push('');
+    const x=r.slice(0,9);
+    while(x.length<9)x.push('');
     return x;
   }).filter(r=>r.some(x=>x));
   let headerIndexHist = rowsHistorial.findIndex(r =>
@@ -594,9 +719,9 @@ const dataContadores = data.concat(dataHistorial);
 
   if(nombre==='clari' || nombre==='cla' || nombre==='clarisse'){
     nombre='Clarisse';
-  }else if(nombre==='vero' || nombre==='veronica' || nombre==='verÃƒÆ’Ã‚Â³nica'){
+  }else if(nombre==='vero' || nombre==='veronica' || nombre==='verÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³nica'){
   nombre='Veronica';
-}else if(nombre==='lujan' || nombre==='lujÃƒÆ’Ã‚Â¡n'){
+}else if(nombre==='lujan' || nombre==='lujÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡n'){
   nombre='Lujan';
 }else if(nombre==='karen'){
     nombre='Karen';
@@ -690,31 +815,38 @@ function tieneAlertaRoja(r){
     );
   }
 
-  const ahora=new Date();
-  const horaPreparando=convertirFechaHora(r[11]);
-  const horaCaminoRetiro=convertirFechaHora(r[12]);
+ const ahora=new Date();
+const fechaHoraEstado=convertirFechaHora(r[7]); // H = FechaHora dinámica
 
-  if(estado.includes('preparando') && horaPreparando){
-    const minutos=(ahora-horaPreparando)/60000;
-    return minutos>60;
-  }
+if(!fechaHoraEstado) return false;
 
-  if(estado.includes('camino retiro') && horaCaminoRetiro){
-    const horas=(ahora-horaCaminoRetiro)/3600000;
-    return horas>48;
-  }
-  if(
-  estado.includes('pendiente') &&
+// PREPARANDO: amarillo parpadeando después de 90 minutos
+if(estado.includes('preparando')){
+  const minutos=(ahora-fechaHoraEstado)/60000;
+  return minutos>90 ? 'amarilloPreparando' : false;
+}
+// CAMINO RETIRO: negro parpadeando después de 90 minutos
+if(
+  estado.includes('camino') &&
   estado.includes('retiro')
 ){
-    const fechaEvento = fechaValida(r[1]);
+  const minutos=(ahora-fechaHoraEstado)/60000;
+  return minutos>90 ? 'caminoRetiroNegro' : false;
+}
 
-    if(fechaEvento){
-      const horas = (ahora - fechaEvento) / 3600000;
-      return horas > 48;
-    }
-  }
-  return false;
+// PENDIENTE RETIRO / PENDIENTE DEVOLUCIÓN: rojo después de 48 horas
+if(
+  estado.includes('pendiente') &&
+  (
+    estado.includes('retiro') ||
+    estado.includes('devolucion')
+  )
+){
+  const horas=(ahora-fechaHoraEstado)/3600000;
+  return horas>48;
+}
+
+return false;
 }
 
  const idsDia = new Set();
@@ -731,8 +863,7 @@ dataContadores.forEach(r=>{
   const fecha=fechaValida(r[1]);
   const asesor=r[4];
   const estado=normalizar(r[5]);
-  const choferEntrega=r[6];
-  const choferRetiro=r[8];
+ const quien=r[6];
 
   if(!fecha) return;
 
@@ -743,17 +874,15 @@ dataContadores.forEach(r=>{
     idsDia.add(id);
     eventosDia++;
     sumar(asesorasDia, asesor);
-    sumar(choferesDia, choferEntrega);
-    sumar(choferesDia, choferRetiro);
+    sumar(choferesDia, quien);
   }
 
   if(esMes && !idsMes.has(id)){
     idsMes.add(id);
     eventosMes++;
     sumar(asesorasMes, asesor);
-    sumar(choferesMes, choferEntrega);
-    sumar(choferesMes, choferRetiro);
-    if(estado.includes('averia') || estado.includes('averÃƒÆ’Ã‚Â­a')) averiasMes++;
+    sumar(choferesMes, quien);
+    if(estado.includes('averia') || estado.includes('averia')) averiasMes++;
   }
 });
   let resumen=`
@@ -771,7 +900,7 @@ dataContadores.forEach(r=>{
     <div class="resumenTop">
   <div class="cardTop"><div class="num">${eventosDia}</div><div class="txt">Eventos hoy</div></div>
   <div class="cardTop"><div class="num">${eventosMes}</div><div class="txt">Eventos del mes</div></div>
-  <div class="cardTop"><div class="num">${averiasMes}</div><div class="txt">AverÃƒÆ’Ã‚Â­as del mes</div></div>
+  <div class="cardTop"><div class="num">${averiasMes}</div><div class="txt">Averias del mes</div></div>
 </div>
 
 <div class="rankGrid">
@@ -788,12 +917,19 @@ dataContadores.forEach(r=>{
 
   data.forEach(r=>{
 
-  const alerta = tieneAlertaRoja(r)
-    ? 'alertaRoja'
-    : estadoClass(r[5]);
+  const resultadoAlerta = tieneAlertaRoja(r);
+
+ const alerta =
+  resultadoAlerta === 'amarilloPreparando'
+    ? 'alertaPreparando90'
+    : resultadoAlerta === 'caminoRetiroNegro'
+      ? 'alertaCaminoRetiroNegro'
+      : resultadoAlerta
+        ? 'alertaRoja'
+        : estadoClass(r[5]);
 
   html+=`<tr class="${alerta}">`
-    + r.slice(0,13).map(x=>`<td>${esc(x)}</td>`).join('')
+    + r.slice(0,9).map(x=>`<td>${esc(x)}</td>`).join('')
     + '</tr>';
 
 });
