@@ -511,15 +511,23 @@ table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px so
 </div>
 <script>
 const SPREADSHEET_ID = "1o6Em3OTB1C3FwU0uca2uZNzA5nJHFFEzxeA22LGt6dc";
+
 const GID_AGENDA = "1978039141";
 const GID_PIZARRA = "1724295369";
-const GID_HISTORIAL = '1391163035';
+
+// HOJAS REALES PARA RANKING PERSONAL
+const GID_PEDIDOS_MASTER = "756362924";
+const GID_HISTORIAL = "873198271";
+
 const SPREADSHEET_ID_FINANZAS = "1r_fcPg1FXPaE29pb-stDhJq9DdcKNDz-8N19U63e-hg";
 const GID_GLOBAL = "1939904617";
 const GID_FAC_VENTAS = "179208916";
+
 const SPREADSHEET_ID_ORDENES = "1IvnufRsi_ibQjXPC_4Ji-qV_MIAjfHMkSYBqp3GNhdE";
 const GID_ORDENES_TRABAJO = "1686737542";
+
 const ROTATE_MS = [20000, 40000, 25000];
+
 let current = 0, paused = false, autoScroll = true, rotateTimer = null, scrollTimer = null;
 function esc(s){return String(s ?? '').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]));}
 function clean(v){return String(v ?? '').trim();}
@@ -532,7 +540,7 @@ function tableToRows(resp){
     (r.c || []).map(c => {
       if(!c) return '';
 
-      // Si es nÃƒÂºmero real, usar el valor real para no perder ceros
+      // Si es nÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºmero real, usar el valor real para no perder ceros
       if(typeof c.v === 'number') return c.v;
 
       // Si Google devuelve fecha tipo Date(2026,5,3), usar el formato visual
@@ -625,7 +633,7 @@ function estadoClass(v){
   if(e.includes('devuelto') || e.includes('retirado')) return 'estado-verde';
   return '';
 }
-function renderPizarra(rows, rowsHistorial=[]){
+function renderPizarra(rows, rowsHistorial=[], rowsMaster=[]){
   const out=document.getElementById('pizarraScroll');
   if(!rows.length){out.innerHTML='<div class="empty">Sin datos de Pizarra</div>';return;}
 
@@ -647,11 +655,17 @@ const fallbackHeaders=[
 ];
   const headers=rows[headerIndex].slice(0,9).map((h,i)=> clean(h) || fallbackHeaders[i]);
 
-  const data=rows.slice(headerIndex+1).map(r=>{
-    const x=r.slice(0,9);
-    while(x.length<9)x.push('');
-    return x;
-  }).filter(r=>r.some(x=>x));
+  const dataFull = rows.slice(headerIndex+1).map(r=>{
+  const x = r.slice(0,13);
+  while(x.length < 13) x.push('');
+  return x;
+}).filter(r=>r.some(x=>x));
+
+const data = dataFull.map(r=>{
+  const x = r.slice(0,9);
+  while(x.length < 9) x.push('');
+  return x;
+});
   let headerIndexHist = rowsHistorial.findIndex(r =>
   r.join(' ').toLowerCase().includes('estado') &&
   r.join(' ').toLowerCase().includes('cliente')
@@ -665,7 +679,21 @@ const dataHistorial = rowsHistorial.slice(headerIndexHist+1).map(r=>{
   return x;
 }).filter(r=>r.some(x=>x));
 
-const dataContadores = data.concat(dataHistorial);
+let headerIndexMaster = rowsMaster.findIndex(r =>
+  r.join(' ').toLowerCase().includes('estado') &&
+  r.join(' ').toLowerCase().includes('cliente')
+);
+
+if(headerIndexMaster < 0) headerIndexMaster = 0;
+
+const dataMaster = rowsMaster.slice(headerIndexMaster+1).map(r=>{
+  const x = r.slice(0,13);
+  while(x.length < 13) x.push('');
+  return x;
+}).filter(r=>r.some(x=>x));
+
+const dataContadores = dataMaster.concat(dataHistorial);
+
 
   function normalizar(txt){
     return String(txt||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
@@ -677,68 +705,117 @@ const dataContadores = data.concat(dataHistorial);
     if(partes.length<3) return null;
     return new Date(parseInt(partes[2],10), parseInt(partes[1],10)-1, parseInt(partes[0],10));
   }
- function fechaHoraValida(valor){
 
-  if(!valor) return null;
+ function normalizarNombre(nombre){
+  nombre = String(nombre || '')
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'')
+    .replace(/\s+/g,' ');
 
-  try{
+  if(!nombre) return '';
 
-    let txt=String(valor).trim();
-
-    const partes=txt.split(' ');
-
-    if(partes.length < 1) return null;
-
-    const fecha=partes[0];
-    const hora=partes[1] || '00:00:00';
-
-    const f=fecha.split('/');
-    const h=hora.split(':');
-
-    if(f.length < 3) return null;
-
-    const d = new Date(
-      Number(f[2]),
-      Number(f[1]) - 1,
-      Number(f[0]),
-      Number(h[0] || 0),
-      Number(h[1] || 0),
-      Number(h[2] || 0)
-    );
-
-    if(isNaN(d.getTime())) return null;
-
-    return d;
-
-  }catch(e){
-    return null;
+  // Arreglos por nombres conocidos
+  if(nombre.includes('clari') || nombre === 'cla' || nombre.includes('clarisse')){
+    return 'Clarisse';
   }
+
+  if(nombre.includes('vero') || nombre.includes('veronica') || nombre.includes('nica')){
+    return 'Veronica';
+  }
+
+  if(nombre.includes('lujan') || nombre.includes('luj')){
+    return 'Lujan';
+  }
+
+  if(nombre.includes('karen')){
+    return 'Karen';
+  }
+
+  if(nombre.includes('arnaldo')){
+    return 'Arnaldo';
+  }
+
+  if(nombre.includes('omar')){
+    return 'Omar';
+  }
+
+  if(nombre.includes('elder')){
+    return 'Elder';
+  }
+
+  if(nombre.includes('ignacio')){
+    return 'Ignacio';
+  }
+
+  if(nombre.includes('miguel')){
+    return 'Miguel';
+  }
+
+  if(nombre.includes('gustavo')){
+    return 'Gustavo';
+  }
+
+  if(nombre.includes('carlos')){
+    return 'Carlos';
+  }
+
+  if(nombre.includes('juan')){
+    return 'Juan';
+  }
+
+  // Si no estÃ¡ en la lista, capitaliza normal
+  return nombre
+    .split(' ')
+    .map(p => p ? p.charAt(0).toUpperCase() + p.slice(1) : '')
+    .join(' ');
 }
-  function sumar(obj,nombre){
-  nombre=String(nombre||'').trim().toLowerCase();
 
-  if(nombre==='clari' || nombre==='cla' || nombre==='clarisse'){
-    nombre='Clarisse';
-  }else if(nombre==='vero' || nombre==='veronica' || nombre==='verÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³nica'){
-  nombre='Veronica';
-}else if(nombre==='lujan' || nombre==='lujÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡n'){
-  nombre='Lujan';
-}else if(nombre==='karen'){
-    nombre='Karen';
-  }else if(nombre==='arnaldo'){
-    nombre='Arnaldo';
-  }else if(nombre==='omar'){
-    nombre='Omar';
-  }else if(nombre==='elder'){
-    nombre='Elder';
-  }else if(nombre==='ignacio'){
-    nombre='Ignacio';
-  }else if(nombre==='miguel'){
-    nombre='Miguel';
+
+function normalizarNombre(nombre){
+  nombre = String(nombre || '')
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'')
+    .replace(/\s+/g,' ');
+
+  if(!nombre) return '';
+
+  if(nombre.includes('clari') || nombre === 'cla' || nombre.includes('clarisse')){
+    return 'Clarisse';
   }
 
+  if(nombre.includes('vero') || nombre.includes('veronica') || nombre.includes('nica')){
+    return 'Veronica';
+  }
+
+  if(nombre.includes('lujan') || nombre.includes('luj')){
+    return 'Lujan';
+  }
+
+  if(nombre.includes('karen')) return 'Karen';
+  if(nombre.includes('arnaldo')) return 'Arnaldo';
+  if(nombre.includes('omar')) return 'Omar';
+  if(nombre.includes('elder')) return 'Elder';
+  if(nombre.includes('ignacio')) return 'Ignacio';
+  if(nombre.includes('miguel')) return 'Miguel';
+  if(nombre.includes('gustavo')) return 'Gustavo';
+  if(nombre.includes('juan')) return 'Juan';
+  if(nombre.includes('carlos')) return 'Carlos';
+
+  return nombre
+    .split(' ')
+    .map(p => p ? p.charAt(0).toUpperCase() + p.slice(1) : '')
+    .join(' ');
+}
+
+function sumar(obj,nombre){
+  nombre = normalizarNombre(nombre);
   if(!nombre) return;
-  obj[nombre]=(obj[nombre]||0)+1;
+
+  obj[nombre] = (obj[nombre] || 0) + 1;
 }
 
   function rankingBonito(titulo,obj){
@@ -747,7 +824,7 @@ const dataContadores = data.concat(dataHistorial);
   '\uD83E\uDD48',
   '\uD83E\uDD49'
 ];
-  const arr=Object.entries(obj).sort((a,b)=>b[1]-a[1]).slice(0,5);
+ const arr=Object.entries(obj).sort((a,b)=>b[1]-a[1]);
   if(!arr.length) return `<div class="rankBox"><b>${titulo}</b><br><span>Sin datos</span></div>`;
 
   return `
@@ -760,36 +837,126 @@ const dataContadores = data.concat(dataHistorial);
   `;
 }
 
-  const hoy=new Date();
+ const hoy = new Date();
 
-  let eventosDia=0, eventosMes=0, averiasMes=0;
-  const choferesDia={}, choferesMes={}, asesorasDia={}, asesorasMes={};function fechaHoraValida(valor){
+let eventosDia = 0, eventosMes = 0, averiasMes = 0;
+
+const idsDia = new Set();
+const idsMes = new Set();
+
+
+const choferesDia = {}, choferesMes = {}, asesorasDia = {}, asesorasMes = {};
+
+function fechaHoraValida(valor){
   if(!valor) return null;
 
-  if(valor instanceof Date) return valor;
+  if(valor instanceof Date && !isNaN(valor.getTime())) return valor;
 
-  let txt=String(valor).trim();
+  let txt = String(valor).trim();
   if(!txt) return null;
 
-  let d=new Date(txt);
+  // Google Sheets puede devolver: Date(2026,5,12,14,30,0)
+  if(txt.startsWith('Date(')){
+    const nums = txt
+      .replace('Date(','')
+      .replace(')','')
+      .split(',')
+      .map(x => Number(String(x).trim()));
+
+    if(nums.length >= 3){
+      const d = new Date(
+        nums[0],
+        nums[1],
+        nums[2],
+        nums[3] || 0,
+        nums[4] || 0,
+        nums[5] || 0
+      );
+
+      if(!isNaN(d.getTime())) return d;
+    }
+  }
+
+  // Primero Paraguay: dd/mm/yyyy hh:mm:ss o dd-mm-yyyy hh:mm:ss
+  const partes = txt.split(' ');
+  const fecha = partes[0].replace(',', '');
+  const hora = partes[1] || '00:00:00';
+
+  const f = fecha.split(/[\/\-]/);
+
+  if(f.length >= 3){
+    let dia = Number(f[0]);
+    let mes = Number(f[1]) - 1;
+    let anio = Number(f[2]);
+
+    if(anio < 100) anio = 2000 + anio;
+
+    const h = hora.split(':');
+
+    const d = new Date(
+      anio,
+      mes,
+      dia,
+      Number(h[0] || 0),
+      Number(h[1] || 0),
+      Number(h[2] || 0)
+    );
+
+    if(!isNaN(d.getTime())) return d;
+  }
+
+  // Ãšltimo recurso
+  const d = new Date(txt);
   if(!isNaN(d.getTime())) return d;
 
-  const partes=txt.split(' ');
-  const fecha=partes[0];
-  const hora=partes[1] || '00:00';
+  return null;
+}
 
-  const f=fecha.split(/[\/\-]/);
-  if(f.length<3) return null;
+function mismaFecha(a,b){
+  return a.getFullYear() === b.getFullYear() &&
+         a.getMonth() === b.getMonth() &&
+         a.getDate() === b.getDate();
+}
 
-  const h=hora.split(':');
+function mismoMes(a,b){
+  return a.getFullYear() === b.getFullYear() &&
+         a.getMonth() === b.getMonth();
+}
 
-  return new Date(
-    parseInt(f[2],10),
-    parseInt(f[1],10)-1,
-    parseInt(f[0],10),
-    parseInt(h[0]||0,10),
-    parseInt(h[1]||0,10)
-  );
+function limpiarNombreRanking(valor){
+  return normalizarNombre(valor);
+}
+
+function sumarRankingPersonal(fila){
+  // H = nombre quien entregÃ³
+  // I = fecha/hora entrega
+  const nombreEntrega = limpiarNombreRanking(fila[7]);
+  const fechaEntrega = fechaHoraValida(fila[8]);
+
+  // J = nombre quien retirÃ³
+  // K = fecha/hora retiro
+  const nombreRetiro = limpiarNombreRanking(fila[9]);
+  const fechaRetiro = fechaHoraValida(fila[10]);
+
+  if(nombreEntrega && fechaEntrega){
+    if(mismaFecha(fechaEntrega,hoy)){
+      choferesDia[nombreEntrega] = (choferesDia[nombreEntrega] || 0) + 1;
+    }
+
+    if(mismoMes(fechaEntrega,hoy)){
+      choferesMes[nombreEntrega] = (choferesMes[nombreEntrega] || 0) + 1;
+    }
+  }
+
+  if(nombreRetiro && fechaRetiro){
+    if(mismaFecha(fechaRetiro,hoy)){
+      choferesDia[nombreRetiro] = (choferesDia[nombreRetiro] || 0) + 1;
+    }
+
+    if(mismoMes(fechaRetiro,hoy)){
+      choferesMes[nombreRetiro] = (choferesMes[nombreRetiro] || 0) + 1;
+    }
+  }
 }
 
 function tieneAlertaRoja(r){
@@ -816,16 +983,16 @@ function tieneAlertaRoja(r){
   }
 
  const ahora=new Date();
-const fechaHoraEstado=convertirFechaHora(r[7]); // H = FechaHora dinámica
+const fechaHoraEstado=convertirFechaHora(r[7]); // H = FechaHora dinÃƒÂ¡mica
 
 if(!fechaHoraEstado) return false;
 
-// PREPARANDO: amarillo parpadeando después de 90 minutos
+// PREPARANDO: amarillo parpadeando despuÃƒÂ©s de 90 minutos
 if(estado.includes('preparando')){
   const minutos=(ahora-fechaHoraEstado)/60000;
   return minutos>90 ? 'amarilloPreparando' : false;
 }
-// CAMINO RETIRO: negro parpadeando después de 90 minutos
+// CAMINO RETIRO: negro parpadeando despuÃƒÂ©s de 90 minutos
 if(
   estado.includes('camino') &&
   estado.includes('retiro')
@@ -834,7 +1001,7 @@ if(
   return minutos>90 ? 'caminoRetiroNegro' : false;
 }
 
-// PENDIENTE RETIRO / PENDIENTE DEVOLUCIÓN: rojo después de 48 horas
+// PENDIENTE RETIRO / PENDIENTE DEVOLUCION: rojo despuÃƒÂ©s de 48 horas
 if(
   estado.includes('pendiente') &&
   (
@@ -849,8 +1016,6 @@ if(
 return false;
 }
 
- const idsDia = new Set();
-const idsMes = new Set();
 
 dataContadores.forEach(r=>{
   const id = String(r[0] || '')
@@ -859,30 +1024,77 @@ dataContadores.forEach(r=>{
     .toUpperCase();
 
   if(!id) return;
+// Pedidos_Master / Historial
+// C = Fecha evento
+// F = Asesora
+// G = Estado
+const fecha = fechaValida(r[2]);
+const asesor = r[5];
+const estado = normalizar(r[6]);
 
-  const fecha=fechaValida(r[1]);
-  const asesor=r[4];
-  const estado=normalizar(r[5]);
- const quien=r[6];
+
+  // Ranking Personal:
+  // suma H/I entrega + J/K retiro
+  // lee Pedidos_Master + Historial
+  sumarRankingPersonal(r);
+
+ 
 
   if(!fecha) return;
 
-  const esHoy=fecha.getDate()===hoy.getDate() && fecha.getMonth()===hoy.getMonth() && fecha.getFullYear()===hoy.getFullYear();
-  const esMes=fecha.getMonth()===hoy.getMonth() && fecha.getFullYear()===hoy.getFullYear();
+  const esHoy =
+    fecha.getDate() === hoy.getDate() &&
+    fecha.getMonth() === hoy.getMonth() &&
+    fecha.getFullYear() === hoy.getFullYear();
+
+  const esMes =
+    fecha.getMonth() === hoy.getMonth() &&
+    fecha.getFullYear() === hoy.getFullYear();
 
   if(esHoy && !idsDia.has(id)){
     idsDia.add(id);
     eventosDia++;
     sumar(asesorasDia, asesor);
-    sumar(choferesDia, quien);
   }
 
   if(esMes && !idsMes.has(id)){
     idsMes.add(id);
     eventosMes++;
     sumar(asesorasMes, asesor);
-    sumar(choferesMes, quien);
-    if(estado.includes('averia') || estado.includes('averia')) averiasMes++;
+  }
+});
+// Averías del mes:
+// SOLO Pizarra_Logis
+// B = Fecha evento
+// F = Estado
+// Fila 1 y 2 son títulos, datos desde fila 3
+
+const idsAveriasPizarra = new Set();
+
+dataFull.forEach(r=>{
+  const id = String(r[0] || '')
+    .trim()
+    .replace(/\s+/g,'')
+    .toUpperCase();
+
+  if(!id) return;
+
+  const fechaAveria = fechaValida(r[1]); // B
+  const estadoAveria = normalizar(r[5]); // F
+
+  if(!fechaAveria) return;
+
+  const esMesAveria =
+    fechaAveria.getMonth() === hoy.getMonth() &&
+    fechaAveria.getFullYear() === hoy.getFullYear();
+
+  if(
+    esMesAveria &&
+    estadoAveria.includes('averia') &&
+    !idsAveriasPizarra.has(id)
+  ){
+    idsAveriasPizarra.add(id);
+    averiasMes++;
   }
 });
   let resumen=`
@@ -904,11 +1116,11 @@ dataContadores.forEach(r=>{
 </div>
 
 <div class="rankGrid">
-      ${rankingBonito('Choferes hoy',choferesDia)}
-      ${rankingBonito('Choferes mes',choferesMes)}
-      ${rankingBonito('Asesoras hoy',asesorasDia)}
-      ${rankingBonito('Asesoras mes',asesorasMes)}
-    </div>
+  ${rankingBonito('Personal Dia',choferesDia)}
+  ${rankingBonito('Personal Mes',choferesMes)}
+  ${rankingBonito('Asesoras hoy',asesorasDia)}
+  ${rankingBonito('Asesoras mes',asesorasMes)}
+</div>
   `;
 
   let html=resumen+'<table class="pizarraTable"><thead><tr>';
@@ -971,17 +1183,37 @@ function resetRotation(){
 }
 async function reloadAll(){
   try{
-    document.getElementById('status').textContent='Cargando datos...';
+    document.getElementById('status').textContent = 'Cargando datos...';
 
-    // 1) Carga principal: Agenda + Pizarra + Historial
-    const [a,p,h] = await Promise.all([
+    // 1) Carga obligatoria: Agenda + Pizarra visible
+    const [a,p] = await Promise.all([
       loadSheet(GID_AGENDA),
-      loadSheet(GID_PIZARRA),
-      loadSheet(GID_HISTORIAL)
+      loadSheet(GID_PIZARRA)
     ]);
 
+    // 2) Carga separada para ranking personal
+    // Si falla Pedidos_Master o Historial, no rompe toda la pantalla
+    let m = [];
+    let h = [];
+
+    try{
+      m = await loadSheet(GID_PEDIDOS_MASTER);
+    }catch(e){
+      console.error('Error cargando Pedidos_Master:', e);
+    }
+
+    try{
+      h = await loadSheet(GID_HISTORIAL);
+    }catch(e){
+      console.error('Error cargando Historial:', e);
+    }
+
     renderAgenda(a);
-    renderPizarra(p,h);
+
+    // p = Pizarra visible
+    // h = Historial
+    // m = Pedidos_Master
+    renderPizarra(p,h,m);
 
     document.getElementById('status').textContent =
       'Datos cargados ' + new Date().toLocaleTimeString();
@@ -989,21 +1221,21 @@ async function reloadAll(){
     resetAutoScroll();
 
   }catch(e){
-    document.getElementById('status').textContent='Error al cargar datos';
+    document.getElementById('status').textContent = 'Error al cargar datos';
     activeScrollBox().innerHTML =
-      '<div class="error">Error al cargar datos:<br>'+esc(e.message)+'</div>';
+      '<div class="error">Error al cargar datos:<br>' + esc(e.message) + '</div>';
   }
 
-  // 2) Carga aparte del Objetivo Comercial
+  // 3) Carga aparte del Objetivo Comercial
   try{
     const [v,g,o] = await Promise.all([
-  loadSheet(GID_FAC_VENTAS, SPREADSHEET_ID_FINANZAS),
-  loadSheet(GID_GLOBAL, SPREADSHEET_ID_FINANZAS),
-  loadSheet(GID_ORDENES_TRABAJO, SPREADSHEET_ID_ORDENES)
-]);
+      loadSheet(GID_FAC_VENTAS, SPREADSHEET_ID_FINANZAS),
+      loadSheet(GID_GLOBAL, SPREADSHEET_ID_FINANZAS),
+      loadSheet(GID_ORDENES_TRABAJO, SPREADSHEET_ID_ORDENES)
+    ]);
 
-renderObjetivo(v,g);
-renderPendientesCobro(o);
+    renderObjetivo(v,g);
+    renderPendientesCobro(o);
 
   }catch(e){
     console.error('Error objetivo comercial:', e);
@@ -1267,3 +1499,4 @@ function updateClock(){const d=new Date();document.getElementById('clock').textC
 </script>
 </body>
 </html>
+
