@@ -1,53 +1,231 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>LM TV</title>
-<style>
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:black;}
-iframe{position:absolute;inset:0;width:100vw;height:100vh;border:none;display:none;}
-iframe.activo{display:block;}
-#nombre{
-  position:fixed;right:15px;bottom:15px;z-index:9999;
-  background:rgba(0,0,0,.7);color:white;padding:8px 14px;
-  border-radius:12px;font-family:Arial;font-weight:bold;
-}
-</style>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>LM TV</title>
+
+  <style>
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: black;
+    }
+
+    iframe {
+      position: absolute;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      display: none;
+      background: black;
+    }
+
+    iframe.activo {
+      display: block;
+    }
+
+    #nombre {
+      position: fixed;
+      right: 15px;
+      bottom: 15px;
+      z-index: 9999;
+
+      background: rgba(0, 0, 0, 0.72);
+      color: white;
+
+      padding: 8px 14px;
+      border-radius: 12px;
+
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    #controles {
+      position: fixed;
+      left: 15px;
+      bottom: 15px;
+      z-index: 9999;
+
+      display: flex;
+      gap: 8px;
+    }
+
+    #controles button {
+      border: none;
+      border-radius: 10px;
+      padding: 8px 12px;
+
+      background: rgba(0, 0, 0, 0.72);
+      color: white;
+
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
 </head>
+
 <body>
 
-<iframe id="p0" class="activo" src="PantallaLogistica.html"></iframe>
+  <!-- LOGÍSTICA -->
+  <iframe
+    id="p0"
+    class="activo"
+    src="PantallaLogistica.html"
+    title="Logística"
+  ></iframe>
 
-<iframe id="p1" src="https://script.google.com/a/macros/lamartinaproducciones.com/s/AKfycbyPZlEfAveFINBRKi7IeXsqFMZKOpCLY6kMA3KpIqoe5F_ic00T5_xe09SF-gzPq8_E/exec"></iframe>
+  <!-- FINANZAS ORIGINAL -->
+  <iframe
+    id="p1"
+    src="https://script.google.com/macros/s/AKfycbyPZlEfAveFINBRKi7IeXsqFMZKOpCLY6kMA3KpIqoe5F_ic00T5_xe09SF-gzPq8_E/exec?p=Finanzas"
+    title="Finanzas"
+  ></iframe>
 
-<iframe id="p2" src="https://script.google.com/macros/s/AKfycbx4I8Pkr0h3720ruaS4K9s6OrrK5eykBsu7Sa_wXNmZfhMos9rVLvf1KZM7udDxr_nihA/exec"></iframe>
+  <!-- DASHBOARD ERP -->
+  <iframe
+    id="p2"
+    src="https://script.google.com/macros/s/AKfycbyPZlEfAveFINBRKi7IeXsqFMZKOpCLY6kMA3KpIqoe5F_ic00T5_xe09SF-gzPq8_E/exec?p=DashboardERP"
+    title="Dashboard ERP"
+  ></iframe>
 
-<div id="nombre">LOGISTICA</div>
+  <!-- UNOA -->
+  <iframe
+    id="p3"
+    src="https://script.google.com/macros/s/AKfycbx4I8Pkr0h3720ruaS4K9s6OrrK5eykBsu7Sa_wXNmZfhMos9rVLvf1KZM7udDxr_nihA/exec"
+    title="Unoa"
+  ></iframe>
 
-<script>
-const pantallas = [
-  {id:"p0", nombre:"LOGISTICA", tiempo:70000},
-  {id:"p1", nombre:"FINANZAS", tiempo:30000},
-  {id:"p2", nombre:"UNOA", tiempo:20000}
-];
+  <div id="controles">
+    <button onclick="pantallaAnterior()">
+      ◀
+    </button>
 
-let actual = 0;
+    <button
+      id="botonPausa"
+      onclick="alternarRotacion()"
+    >
+      ⏸ Pausar
+    </button>
 
-function mostrarPantalla(){
-  document.querySelectorAll("iframe").forEach(x=>x.classList.remove("activo"));
+    <button onclick="pantallaSiguiente()">
+      ▶
+    </button>
+  </div>
 
-  const p = pantallas[actual];
-  document.getElementById(p.id).classList.add("activo");
-  document.getElementById("nombre").textContent = p.nombre;
+  <div id="nombre">LOGÍSTICA</div>
 
-  setTimeout(()=>{
-    actual = (actual + 1) % pantallas.length;
+  <script>
+    const pantallas = [
+      {
+        id: "p0",
+        nombre: "LOGÍSTICA",
+        tiempo: 70000
+      },
+      {
+        id: "p1",
+        nombre: "FINANZAS",
+        tiempo: 30000
+      },
+      {
+        id: "p2",
+        nombre: "DASHBOARD ERP",
+        tiempo: 60000
+      },
+      {
+        id: "p3",
+        nombre: "UNOA",
+        tiempo: 20000
+      }
+    ];
+
+    let actual = 0;
+    let rotacionActiva = true;
+    let temporizador = null;
+
+    function mostrarPantalla() {
+      document
+        .querySelectorAll("iframe")
+        .forEach(function (iframe) {
+          iframe.classList.remove("activo");
+        });
+
+      const pantalla = pantallas[actual];
+      const iframe =
+        document.getElementById(pantalla.id);
+
+      if (iframe) {
+        iframe.classList.add("activo");
+      }
+
+      document.getElementById(
+        "nombre"
+      ).textContent = pantalla.nombre;
+
+      programarSiguiente();
+    }
+
+    function programarSiguiente() {
+      clearTimeout(temporizador);
+
+      if (!rotacionActiva) {
+        return;
+      }
+
+      temporizador = setTimeout(function () {
+        actual =
+          (actual + 1) %
+          pantallas.length;
+
+        mostrarPantalla();
+      }, pantallas[actual].tiempo);
+    }
+
+    function pantallaSiguiente() {
+      actual =
+        (actual + 1) %
+        pantallas.length;
+
+      mostrarPantalla();
+    }
+
+    function pantallaAnterior() {
+      actual =
+        (actual - 1 + pantallas.length) %
+        pantallas.length;
+
+      mostrarPantalla();
+    }
+
+    function alternarRotacion() {
+      rotacionActiva = !rotacionActiva;
+
+      const boton =
+        document.getElementById(
+          "botonPausa"
+        );
+
+      boton.textContent =
+        rotacionActiva
+          ? "⏸ Pausar"
+          : "▶ Reanudar";
+
+      programarSiguiente();
+    }
+
     mostrarPantalla();
-  }, p.tiempo);
-}
-
-mostrarPantalla();
-</script>
+  </script>
 
 </body>
 </html>
